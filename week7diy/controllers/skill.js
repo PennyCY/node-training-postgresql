@@ -2,6 +2,7 @@ const { dataSource } = require('../db/data-source')
 const logger = require('../utils/logger')('SkillController')
 // const { isValidString } = require('../utils/validUtils')
 
+const{isUndefined,isNotValidSting,isNotValidInteger} = require('../utils/validUtils')
 
 
 async function getSkills (req, res, next)  {
@@ -86,4 +87,10 @@ async function deleteSkill(req, res, next) {
     } catch (error) {
       next(error)
     }
-  }
+}
+
+module.exports={
+    getSkills,
+    postSkill,
+    deleteSkill
+}

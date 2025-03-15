@@ -4,12 +4,14 @@ const router = express.Router()
 const config = require('../config/index')
 const { dataSource } = require('../db/data-source')
 const logger = require('../utils/logger')('Admin')
-const{isUndefined,isNotValidSting,isNotValidInteger} = require('../utils/validUtils')
 const auth = require('../middlewares/auth')({
   secret: config.get('secret').jwtSecret,
   userRepository: dataSource.getRepository('User'),
   logger
 })
+const isCoach = require('../middlewares/isCoach')
+const{isUndefined,isNotValidSting,isNotValidInteger} = require('../utils/validUtils')
+
 
 //新增教練課程資料
 router.post('/coaches/courses', auth, isCoach, async (req, res, next) => {
@@ -33,26 +35,7 @@ router.post('/coaches/courses', auth, isCoach, async (req, res, next) => {
       })
       return
     }
-    const userRepo = dataSource.getRepository('User')
-    const existUser = await userRepo.findOne({
-      select: ['id', 'name', 'role'],
-      where: { id: userId }
-    })
-    if (!existUser) {
-      logger.warn('使用者不存在')
-      res.status(400).json({
-        status: 'failed',
-        message: '使用者不存在'
-      })
-      return
-    } else if (existUser.role !== 'COACH') {
-      logger.warn('使用者尚未成為教練')
-      res.status(400).json({
-        status: 'failed',
-        message: '使用者尚未成為教練'
-      })
-      return
-    }
+ 
     const courseRepo = dataSource.getRepository('Course')
     const newCourse = courseRepo.create({
       user_id: userId,
@@ -83,6 +66,7 @@ router.post('/coaches/courses', auth, isCoach, async (req, res, next) => {
 //編輯教練課程資料
 router.put('/coaches/courses/:courseId', auth, isCoach,  async (req, res, next) => {
   try {
+    const {id}=req.user
     const { courseId } = req.params
     const {
       skill_id: skillId, name, description, start_at: startAt, end_at: endAt,
@@ -105,7 +89,7 @@ router.put('/coaches/courses/:courseId', auth, isCoach,  async (req, res, next) 
     }
     const courseRepo = dataSource.getRepository('Course')
     const existCourse = await courseRepo.findOne({
-      where: { id: courseId }
+      where: { id: courseId , user_id: id}
     })
     if (!existCourse) {
       logger.warn('課程不存在')

@@ -1,4 +1,4 @@
-//做防呆來驗證身分
+//做防呆>>確認目前是否為登入狀態
 const jwt = require('jsonwebtoken')
 
 const PERMISSION_DENIED_STATUS_CODE = 401

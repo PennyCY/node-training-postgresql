@@ -11,6 +11,11 @@ module.exports = new EntitySchema({
     },
     user_id: {
       type: 'uuid',
+      unique: true,
+      nullable: false
+    },
+    user_id: {
+      type: 'uuid',
       nullable: false,
       foreignKey: {
         name: 'course_user_id_fkey',

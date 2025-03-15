@@ -6,7 +6,7 @@ function generateError (status = PERMISSION_DENIED_STATUS_CODE, message = FORBID
   error.status = status
   return error
 }
-//驗證是否為教練
+//驗證是否為教練身分
 module.exports = (req, res, next) => {
   if (!req.user || req.user.role !== 'COACH') {
     next(generateError())

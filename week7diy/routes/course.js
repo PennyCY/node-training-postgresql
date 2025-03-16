@@ -1,5 +1,4 @@
 const express = require('express')
-const { IsNull } = require('typeorm')
 
 const router = express.Router()
 const config = require('../config/index')

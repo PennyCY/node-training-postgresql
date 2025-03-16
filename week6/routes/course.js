@@ -55,7 +55,7 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.post('/:courseId', async (req, res, next) => {
+router.post('/:courseId', auth, async (req, res, next) => {
   try{
     const {id}=req.user
     const {courseId}= req.params
@@ -133,7 +133,7 @@ router.post('/:courseId', async (req, res, next) => {
 
 })
 
-router.delete('/:courseId', async (req, res, next) => {
+router.delete('/:courseId', auth, async (req, res, next) => {
   try{
     const { id } = req.user
     const { courseId } = req.params

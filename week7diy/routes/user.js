@@ -24,4 +24,6 @@ router.put('/profile', auth, user.putProfile)
 
 router.put('/password', auth, user.putPassword)
 
+router.get('/credit-package', auth, user.getCreditPackage)
+
 module.exports = router

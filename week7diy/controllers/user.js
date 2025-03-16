@@ -296,10 +296,50 @@ async function putPassword(req, res, next) {
     }
 }
 
+async function getCreditPackage(req, res, next) {
+try{
+  const { id } = req.user
+  const creditPurchaseRepo = dataSource.getRepository('CreditPurchase')
+  const creditPurchase = await creditPurchaseRepo.find({
+    select: {
+      purchased_credits: true,
+      price_paid: true,
+      purchaseAt: true,
+      CreditPackage: {
+        name: true
+      }
+    },
+    where: {
+      user_id: id
+    },
+    relations: {
+      CreditPackage: true
+    }
+  })
+  res.status(200).json({
+    status: 'success',
+    data: creditPurchase.map((item) => {
+      return {
+        purchased_credits: item.purchased_credits,
+        price_paid:item.price_paid,
+        name: item.CreditPackage.name,
+        purchase_at: item.purchaseAt
+        
+      }
+    })
+  })
+
+}catch(error){
+logger.error('取得使用者資料錯誤:', error)
+next(error)
+}
+}
+
 module.exports = {
     postSignup,
     postLogin,
     getProfile,
     putProfile,
-    putPassword
+    putPassword,
+    getCreditPackage
 }
